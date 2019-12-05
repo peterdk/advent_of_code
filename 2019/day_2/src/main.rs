@@ -1,31 +1,62 @@
 fn main()
 {
 	// test();
-	day1();
+	// part1();
+	part2();
 }
 
-fn day1()
+fn part1()
 {
-	run(INPUT1, true);
+	run(&mut parse(INPUT1), true);
 }
+
+fn part2()
+{
+
+	let mut result:usize = 0;
+	let mut run_count = 0;
+	for noun in (0..100)
+	{
+		for verb in (0..100)
+		{
+			run_count += 1;
+			let mut program = parse(INPUT1);			
+			program[1] = noun;
+			program[2] = verb;
+			run(&mut program, false);
+			if program[0] == 19690720
+			{
+				let answer = 100 * noun + verb;
+				println!("run:{},noun:{}, verb:{}, answer:{}",run_count,noun, verb,answer);
+				return;
+			}
+		}
+	}
+}
+
 fn test()
 {
-		run(TEST1, false);
-		run(TEST2, false);
-		run(TEST3, false);
-		run(TEST4, false);
-		run(TEST5, false);
+		run(&mut parse(TEST1), false);
+		run(&mut parse(TEST2), false);
+		run(&mut parse(TEST3), false);
+		run(&mut parse(TEST4), false);
+		run(&mut parse(TEST5), false);}
+
+fn parse(input:&str) -> Vec<usize>
+{
+	let program:Vec<usize>  = input.split(",").map(|i|{i.trim().parse().unwrap()}).collect();
+	return program;
 }
 
-fn run(input:&str, restore_state:bool)
+fn run(program:&mut Vec<usize>, restore_state:bool)
 {
-	let mut program:Vec<usize> =  input.split(",").map(|i|{i.trim().parse().unwrap()}).collect();
-	if (restore_state)
+	
+	if restore_state
 	{
 		program[1] = 12;
 		program[2] = 2;
 	}
-	println!("instruction size = {}, proper instruction count?: {}", program.len(), if program.len() % 4 == 0  {true} else {false});
+//	println!("instruction size = {}, proper instruction count?: {}", program.len(), if program.len() % 4 == 0  {true} else {false});
 	for p in (0..program.len()).step_by(4)
 	{
 		let p = p as usize;
@@ -41,7 +72,7 @@ fn run(input:&str, restore_state:bool)
 		{
 			break;
 		}
-		print!("{:?}: ", opcode);
+		// print!("{:?}: ", opcode);
 		
 		
 		let lvalue_index = program[p+1];
@@ -71,14 +102,15 @@ fn run(input:&str, restore_state:bool)
 			OpCode::Multiply => lvalue * rvalue,
 			_ => 0
 		};
-		print!("{} {} => {}\n", lvalue, rvalue, result);
+		// print!("{} {} => {}\n", lvalue, rvalue, result);
 		
 		program[result_index] = result;
 		
 		
 	}
-	println!("Result after running: {:?}", program);
-	println!("Position 0 value left: {}", program[0]);
+	// println!("Result after running: {:?}", program);
+	// println!("Position 0value left: {}", program[0]);
+
 }
 
 #[derive(Debug)]
