@@ -197,7 +197,7 @@ fn get_lowest_manhattan_intersect(moves0:&str, moves1:&str) -> i32
 	println!("intersections: {}", intersections.len());	
 	intersections.sort_by_key(|p| p.manhattan());	
 	let result = intersections[0];
-	// println!("closest: {:?}, manhatten distance", result, result.manhattan());
+	println!("closest: {:?}, manhatten distance:{}", result, result.manhattan());
 	return result.manhattan()
 	
 }
